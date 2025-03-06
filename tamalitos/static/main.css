@@ -1,0 +1,75 @@
+:root {
+    --color-primary: #2D5A27;
+    /* Verde bosque */
+    --color-secondary: #8B4513;
+    /* Marrón tierra */
+    --color-accent: #A0522D;
+    /* Marrón siena */
+    --color-background: #F5F5DC;
+    /* Beige natural */
+    --color-text: #333;
+    /* Texto oscuro */
+    --color-hover: #3A7A33;
+    /* Verde hover */
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    /* Sombra ligera */
+}
+
+.bg-primary-custom {
+    background-color: var(--color-primary);
+}
+
+.text-primary-custom {
+    color: var(--color-primary);
+}
+
+.bg-gradient-custom {
+    background-color: var(--color-primary);
+}
+
+.card-hover {
+    transition: transform 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+}
+
+.btn-menu {
+    background-color: var(--color-secondary);
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px var(--color-shadow);
+}
+
+.btn-menu:hover {
+    background-color: var(--color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px var(--color-shadow);
+}
+
+.bg-custom {
+    background-color: var(--color-background);
+}
+
+body {
+    font-family: "Montserrat", monospace;
+}
+
+.hero-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    height: 140vh; 
+    background-attachment: fixed;
+    z-index: -20;
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(39, 63, 39, 0.411); 
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamalitos Don Juanito</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="bg-custom">
+    <!-- Navegación -->
+    <nav class="bg-primary-custom text-white p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-tight">Tamalitos Don Juanito</h1>
+            <div class="space-x-6">
+                <a href="#inicio" class="hover:text-gray-200 transition-colors">Inicio</a>
+                <a href="#menu" class="hover:text-gray-200 transition-colors">Menú</a>
+                <a href="#contacto" class="hover:text-gray-200 transition-colors">Contacto</a>
+                <a href="{{ url_for('sesion') }}"
+                    class="bg-primary-custom text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors">Sistema</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative hero-bg text-white">
+        <img class="hero-bg" src="{{ url_for('static', filename='Img/tamesis.png') }}" alt="imagen-tamesis" >
+        <div class="overlay">
+            <div class="container mx-auto py-32 px-4">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-5xl font-bold mb-6 leading-tight">Sabor Artesanal con Toque Moderno</h2>
+                    <p class="text-xl text-gray-200 mb-10">Tradición y calidad desde 2025</p>
+                    <a href="#menu" class="btn-menu px-10 py-4 rounded-full text-lg font-semibold inline-block">Explorar
+                        Menú</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menú -->
+    <section id="menu" class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-primary-custom mb-16">Nuestros Tamales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Tamal 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-primary-custom">
+                    <img src="{{ url_for('static', filename='Img/tamal1.jpg') }}" alt="Tamal Verde" 
+                        class="w-full h-56 object-cover rounded-xl mb-6">
+                    <h3 class="text-2xl font-bold text-secondary mb-2">Tamal Verde</h3>
+                    <p class="text-gray-600 mb-4">Delicioso tamal de pollo en salsa verde</p>
+                    <p class="text-2xl font-bold text-primary-custom">$10.000</p>
+                </div>
+                <!-- Tamal 2 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-primary-custom">
+                    <img src="{{ url_for('static', filename='Img/tamal2.jpg') }}" alt="Tamal Rojo"  class="w-full h-56 object-cover rounded-xl mb-6">
+                    <h3 class="text-2xl font-bold text-secondary mb-2">Tamal Rojo</h3>
+                    <p class="text-gray-600 mb-4">Tradicional tamal de puerco en salsa roja</p>
+                    <p class="text-2xl font-bold text-primary-custom">$15.000</p>
+                </div>
+                <!-- Tamal 3 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-primary-custom">
+                    <img src="{{ url_for('static', filename='Img/tamal3.jpg') }}" alt="Tamal de Rajas" 
+                        class="w-full h-56 object-cover rounded-xl mb-6">
+                    <h3 class="text-2xl font-bold text-secondary mb-2">Tamal de Rajas</h3>
+                    <p class="text-gray-600 mb-4">Sabroso tamal de rajas con queso</p>
+                    <p class="text-2xl font-bold text-primary-custom">$10.000</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-24 bg-custom">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-primary-custom mb-16">Contacto</h2>
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-2xl p-10 shadow-xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div>
+                            <h3 class="text-xl font-bold text-secondary mb-3">Ubicación</h3>
+                            <p class="text-gray-600">Carrera 10 #12-71 Tamesis, Antioquia</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-secondary mb-3">Horario</h3>
+                            <p class="text-gray-600">Lunes a Domingo: 7:00 AM - 3:00 PM</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-secondary mb-3">Teléfono</h3>
+                            <p class="text-gray-600">555-123-4567</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-secondary mb-3">Email</h3>
+                            <p class="text-gray-600">info@tamalitodonjuanito.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-custom text-white py-10">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-200">© 2025 Tamalitos Don Juanito - Todos los derechos reservados</p>
+        </div>
+    </footer>
+</body>
+
+</html>

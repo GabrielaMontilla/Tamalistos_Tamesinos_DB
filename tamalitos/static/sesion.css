@@ -1,0 +1,131 @@
+:root {
+    --color-primary: #2D5A27;      /* Verde bosque */
+    --color-secondary: #8B4513;     /* Marrón tierra */
+    --color-accent: #2d40a0;        /* Marrón siena */
+    --color-background: #F5F5DC;    /* Beige natural */
+    --color-text: #333;
+    --color-hover: #A27B5C;         /* Verde hover */
+    --color-shadow: rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: "Montserrat", monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: rgba(251, 207, 40, 0);
+    background-image: linear-gradient(133deg, rgba(39, 90, 40, 0.89) 24%, rgba(2, 10, 26, 0.89) 100%),  url();
+    background-size: auto;
+    background-position: left top;
+    background-repeat: repeat;
+    color: var(--color-text);
+}
+
+.container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--color-shadow);
+    width: 100%;
+    max-width: 400px;
+}
+
+.main-title {
+    text-align: center;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+h2 {
+    color: var(--color-secondary);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--color-text);
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-shadow);
+}
+
+button {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.button {
+    position: relative;
+    top: 2px;
+    left: 130px;
+    text-decoration: none;
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+
+}
+
+
+button:hover {
+    background-color: var(--color-hover);
+}
+
+.toggle-form {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.toggle-form a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.toggle-form a:hover {
+    color: var(--color-hover);
+}
+
+.error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.success {
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}

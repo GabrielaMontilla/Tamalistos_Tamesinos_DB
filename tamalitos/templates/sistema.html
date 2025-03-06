@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamalitos Tamesinos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='sistema.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <h1>🌿 Tamalitos Tamesinos</h1>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-button active" data-tab="empleado">Empleado</button>
+        <button class="tab-button" data-tab="proveedor">Proveedor</button>
+        <button class="tab-button" data-tab="insumo">Insumo</button>
+        <button class="tab-button" data-tab="inventario">Inventario</button>
+        <button class="tab-button" data-tab="compra">Compra</button>
+        <button class="tab-button" data-tab="producto">Producto</button>
+        <button class="tab-button" data-tab="receta">Receta</button>
+        <button class="tab-button" data-tab="cliente">Cliente</button>
+        <button class="tab-button" data-tab="facturaVenta">Factura</button>
+        <button class="tab-button" data-tab="nomina">Nomina</button>
+    </nav>
+
+    <main class="content">
+        <!-- CLIENTE SECTION -->
+        <section id="cliente" class="tab-content active">
+            <h2 class="form-title">Registro de Cliente</h2>
+            <form id="clienteForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="ccCliente">CC Cliente</label>
+                        <input type="text" id="ccCliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreCliente">Nombre</label>
+                        <input type="text" id="nombreCliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefonoCliente">Teléfono</label>
+                        <input type="text" id="telefonoCliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccionCliente">Dirección</label>
+                        <input type="text" id="direccionCliente" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <h2 class="form-title">Eliminar Cliente</h2>
+            <form id="eliminarClienteForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="idClienteEliminar">ID Cliente</label>
+                        <input type="text" id="idClienteEliminar" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+             
+            <div class="records">
+                <h3>Lista de Clientes</h3>
+                <table id="tablaClientes" border="1">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CC</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-clientes"></tbody>
+                </table>
+            </div>
+
+            <script>
+                        // Obtener Clientes
+                fetch("http://127.0.0.1:5000/clientes") // 🔹 Se corrigió la URL
+                    .then(response => response.json())
+                    .then(data => {
+                        let tabla = document.getElementById("tablaClientes");
+                        tabla.innerHTML = ""; 
+                        if (data.mensaje) {
+                            tabla.innerHTML = `<tr><td colspan="6">${data.mensaje}</td></tr>`;
+                        } else {
+                            data.forEach(dato => {
+                                let fila = `<tr>
+                                    <td>${dato.ID_Cliente}</td>
+                                    <td>${dato.Cc_Cliente}</td>
+                                    <td>${dato.nombre_Cliente}</td>
+                                    <td>${dato.telefono_Cliente}</td>
+                                    <td>${dato.direccion_Delivery}</td>
+                                </tr>`;
+                                tabla.innerHTML += fila;
+                            });
+                        }
+                    })
+                    .catch(error => console.error("❌ Error al obtener datos de clientes:", error));
+                        
+                // 🔹 Agregar Cliente
+                document.getElementById("clienteForm").addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    let data = {
+                    dni: document.getElementById("ccCliente").value,
+                    nombre: document.getElementById("nombreCliente").value,
+                    telefono: document.getElementById("telefonoCliente").value,
+                    direccion: document.getElementById("direccionCliente").value,
+                };
+
+                    fetch("http://127.0.0.1:5000/clientes", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(respuesta => {
+                        console.log("Respuesta del servidor:", respuesta);
+                        alert(respuesta.mensaje);
+                        location.reload();
+                    })
+                    .catch(error => console.error("❌ Error al eliminar cliente:", error));
+                }); // 🔹 ¡Cierre correcto aquí!
+                
+                //Eliminar cliente
+                document.getElementById("eliminarClienteForm").addEventListener("submit", function(event) {
+                    event.preventDefault();
+
+                    let idCliente = document.getElementById("idClienteEliminar").value;
+                    console.log("Formulario enviado, ID:", idCliente); // 🔹 Verifica si el evento se ejecuta
+
+                    if (!idCliente) {
+                        alert("Por favor, ingresa un ID de cliente válido.");
+                        return;
+                    }
+
+                    fetch(`http://127.0.0.1:5000/clientes/${idCliente}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(respuesta => {
+                        console.log("Respuesta del servidor:", respuesta);
+                        alert(respuesta.mensaje);
+                        location.reload();
+                    })
+                    .catch(error => console.error("❌ Error al eliminar cliente:", error));
+                }); // 🔹 ¡Cierre correcto aquí!
+            </script>
+        </section>
+
+
+
+
+
+
+        <!-- PRODUCTO SECTION -->
+        <section id="producto" class="tab-content">
+            <h2 class="form-title">Registro de Producto</h2>
+            <form id="productoForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codProducto">Cod Producto</label>
+                        <input type="number" id="codProducto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreProducto">Nombre Producto</label>
+                        <input type="text" id="nombreProducto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionProducto">Descripción Producto</label>
+                        <textarea id="descripcionProducto" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="precioProducto">Precio Producto</label>
+                        <input type="number" id="precioProducto" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Productos</h3>
+                <table id="tablaProductos">
+                    <thead>
+                        <tr>
+                            <th>Cod Producto</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VENTA SECTION -->
+        <section id="venta" class="tab-content">
+            <h2 class="form-title">Registro de Venta</h2>
+            <form id="ventaForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codVenta">Cod Venta</label>
+                        <input type="number" id="codVenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estadoCuenta">Estado de Cuenta</label>
+                        <select id="estadoCuenta" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Pagado">Pagado</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="idClienteVenta">ID Cliente</label>
+                        <input type="number" id="idClienteVenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codProductoVenta">Cod Producto</label>
+                        <input type="number" id="codProductoVenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idEmpleadoVenta">ID Empleado</label>
+                        <input type="number" id="idEmpleadoVenta" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Ventas</h3>
+                <table id="tablaVentas">
+                    <thead>
+                        <tr>
+                            <th>Cod Venta</th>
+                            <th>Estado de Cuenta</th>
+                            <th>ID Cliente</th>
+                            <th>Cod Producto</th>
+                            <th>ID Empleado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FACTURA VENTA SECTION -->
+        <section id="facturaVenta" class="tab-content">
+            <h2 class="form-title">Registro de Factura Venta</h2>
+            <form id="facturaVentaForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codFacturaVenta">Cod Factura</label>
+                        <input type="number" id="codFacturaVenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idClienteFactura">ID Cliente</label>
+                        <input type="number" id="idClienteFactura" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codProductoFactura">Cod Producto</label>
+                        <input type="number" id="codProductoFactura" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idEmpleadoFactura">ID Empleado</label>
+                        <input type="number" id="idEmpleadoFactura" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="metodoPago">Método de Pago</label>
+                        <select id="metodoPago" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFactura">Fecha</label>
+                        <input type="date" id="fechaFactura" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadFactura">Cantidad</label>
+                        <input type="number" id="cantidadFactura" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalVenta">Total Venta</label>
+                        <input type="number" id="totalVenta" required>
+                    </div>
+                </div>
+
+                <h3>Agregar Productos</h3>
+                <table id="productosTable">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div class="form-group">
+                    <label for="producto">Producto</label>
+                    <input type="text" id="producto">
+                </div>
+                <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" id="cantidad">
+                </div>
+                <div class="form-group">
+                    <label for="precioUnitario">Precio Unitario</label>
+                    <input type="number" id="precioUnitario">
+                </div>
+                <button type="button" id="agregarProducto" class="btn btn-secondary">Agregar Producto</button>
+
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar Factura</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+
+            <div class="records">
+                <h3>Lista de Facturas Venta</h3>
+                <table id="tablaFacturasVenta">
+                    <thead>
+                        <tr>
+                            <th>Cod Factura</th>
+                            <th>ID Cliente</th>
+                            <th>Cod Producto</th>
+                            <th>ID Empleado</th>
+                            <th>Método Pago</th>
+                            <th>Fecha</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- EMPLEADO SECTION -->
+        <section id="empleado" class="tab-content">
+            <h2 class="form-title">Registro de Empleado</h2>
+            <form id="empleadoForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="idEmpleado">ID Empleado</label>
+                        <input type="number" id="idEmpleado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ccEmpleado">CC Empleado</label>
+                        <input type="text" id="ccEmpleado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreEmpleado">Nombre</label>
+                        <input type="text" id="nombreEmpleado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccionEmpleado">Dirección</label>
+                        <input type="text" id="direccionEmpleado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefonoEmpleado">Teléfono</label>
+                        <input type="tel" id="telefonoEmpleado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cargoEmpleado">Cargo</label>
+                        <input type="text" id="cargoEmpleado" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Empleados</h3>
+                <table id="tablaEmpleados">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CC</th>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Cargo</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- NOMINA SECTION -->
+        <section id="nomina" class="tab-content">
+            <h2 class="form-title">Registro de Nómina</h2>
+            <form id="nominaForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="idEmpleadoNomina">ID Empleado</label>
+                        <input type="number" id="idEmpleadoNomina" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ccEmpleadoNomina">CC Empleado</label>
+                        <input type="text" id="ccEmpleadoNomina" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mesPago">Mes de Pago</label>
+                        <select id="mesPago" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="anoPago">Año de Pago</label>
+                        <input type="number" id="anoPago" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="salarioBruto">Salario Bruto</label>
+                        <input type="number" id="salarioBruto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descuentos">Descuentos</label>
+                        <input type="number" id="descuentos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bonificaciones">Bonificaciones</label>
+                        <input type="number" id="bonificaciones" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="salarioNeto">Salario Neto</label>
+                        <input type="number" id="salarioNeto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaPago">Fecha de Pago</label>
+                        <input type="date" id="fechaPago" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Nóminas</h3>
+                <table id="tablaNominas">
+                    <thead>
+                        <tr>
+                            <th>ID Empleado</th>
+                            <th>CC Empleado</th>
+                            <th>Mes</th>
+                            <th>Año</th>
+                            <th>Salario Bruto</th>
+                            <th>Descuentos</th>
+                            <th>Bonificaciones</th>
+                            <th>Salario Neto</th>
+                            <th>Fecha Pago</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- RECETA SECTION -->
+        <section id="receta" class="tab-content">
+            <h2 class="form-title">Registro de Receta</h2>
+            <form id="recetaForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codReceta">Cod Receta</label>
+                        <input type="number" id="codReceta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoProducto">Código Producto</label>
+                        <input type="number" id="codigoProducto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codInsumoReceta">Cod Insumo</label>
+                        <input type="number" id="codInsumoReceta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreInsumoUtilizado">Nombre Insumo Utilizado</label>
+                        <input type="text" id="nombreInsumoUtilizado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadUsada">Cantidad Usada</label>
+                        <input type="number" id="cantidadUsada" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Recetas</h3>
+                <table id="tablaRecetas">
+                    <thead>
+                        <tr>
+                            <th>Cod Receta</th>
+                            <th>Código Producto</th>
+                            <th>Cod Insumo</th>
+                            <th>Nombre Insumo</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- INSUMO SECTION -->
+        <section id="insumo" class="tab-content">
+            <h2 class="form-title">Registro de Insumo</h2>
+            <form id="insumoForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codInsumo">Cod Insumo</label>
+                        <input type="number" id="codInsumo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaVencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="fechaVencimiento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreInsumo">Nombre Insumo</label>
+                        <input type="text" id="nombreInsumo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionInsumo">Descripción</label>
+                        <textarea id="descripcionInsumo" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadInsumo">Cantidad</label>
+                        <input type="number" id="cantidadInsumo" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Insumos</h3>
+                <table id="tablaInsumos">
+                    <thead>
+                        <tr>
+                            <th>Cod Insumo</th>
+                            <th>Fecha Vencimiento</th>
+                            <th>Nombre Insumo</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- INVENTARIO SECTION -->
+        <section id="inventario" class="tab-content">
+            <h2 class="form-title">Registro de Inventario</h2>
+            <form id="inventarioForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codInventario">Cod Inventario</label>
+                        <input type="number" id="codInventario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codInsumoInventario">Cod Insumo</label>
+                        <input type="number" id="codInsumoInventario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreInsumoComprado">Nombre Insumo Comprado</label>
+                        <input type="text" id="nombreInsumoComprado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadInventario">Cantidad</label>
+                        <input type="number" id="cantidadInventario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaIngreso">Fecha de Ingreso</label>
+                        <input type="date" id="fechaIngreso" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estadoInsumo">Estado del Insumo</label>
+                        <select id="estadoInsumo" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Vigente">Vigente</option>
+                            <option value="Próximo a vencer">Próximo a vencer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaVencimientoInventario">Fecha de Vencimiento</label>
+                        <input type="date" id="fechaVencimientoInventario" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Inventarios</h3>
+                <table id="tablaInventarios">
+                    <thead>
+                        <tr>
+                            <th>Cod Inventario</th>
+                            <th>Cod Insumo</th>
+                            <th>Nombre Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Fecha Ingreso</th>
+                            <th>Estado</th>
+                            <th>Fecha Vencimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- COMPRA SECTION -->
+        <section id="compra" class="tab-content">
+            <h2 class="form-title">Registro de Compra</h2>
+            <form id="compraForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codCompra">Cod Compra</label>
+                        <input type="number" id="codCompra" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idProveedor">ID Proveedor</label>
+                        <input type="number" id="idProveedor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codConsumo">Cod Consumo</label>
+                        <input type="number" id="codConsumo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaCompra">Fecha Compra</label>
+                        <input type="date" id="fechaCompra" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreInsumoCompradoCompra">Nombre Insumo Comprado</label>
+                        <input type="text" id="nombreInsumoCompradoCompra" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadInsumoCompra">Cantidad Insumo</label>
+                        <input type="number" id="cantidadInsumoCompra" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Compras</h3>
+                <table id="tablaCompras">
+                    <thead>
+                        <tr>
+                            <th>Cod Compra</th>
+                            <th>ID Proveedor</th>
+                            <th>Cod Consumo</th>
+                            <th>Fecha Compra</th>
+                            <th>Nombre Insumo</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PROVEEDOR SECTION -->
+        <section id="proveedor" class="tab-content">
+            <h2 class="form-title">Registro de Proveedor</h2>
+            <form id="proveedorForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="idProveedorProveedor">ID Proveedor</label>
+                        <input type="number" id="idProveedorProveedor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nitProveedor">NIT Proveedor</label>
+                        <input type="text" id="nitProveedor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreProveedor">Nombre</label>
+                        <input type="text" id="nombreProveedor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccionProveedor">Dirección</label>
+                        <input type="text" id="direccionProveedor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefonoProveedor">Teléfono</label>
+                        <input type="tel" id="telefonoProveedor" required>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <div class="records">
+                <h3>Lista de Proveedores</h3>
+                <table id="tablaProveedores">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NIT</th>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="/Assets/Js/sistema.js"></script> 
+</body>
+</html>
