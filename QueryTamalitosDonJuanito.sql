@@ -844,23 +844,6 @@ SELECT 'Transacción completada con éxito.' AS Mensaje;
 -- Verificar el registro insertado
 SELECT * FROM Nomina WHERE ID_EmpleadoFK2 = 2002;
 
-
-DROP TRIGGER IF EXISTS calcular_salario_neto;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 select
     Cliente.nombre_Cliente as Cliente,
     Producto.nombre_Producto as Producto,
