@@ -1,5 +1,4 @@
 CREATE DATABASE TamalitosDonJuanito;
-drop database tamalitosdonjuanito;
 USE TamalitosDonJuanito;
 
 -- Tabla Cliente
